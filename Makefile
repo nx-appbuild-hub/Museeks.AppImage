@@ -13,7 +13,18 @@ PWD:=$(shell pwd)
 
 DESTINATION="Museeks.AppImage"
 
-all:
+all: clean
 	echo "Building: $(DESTINATION)"
 	wget --output-document=$(DESTINATION) --continue https://github.com/martpie/museeks/releases/download/0.11.4/museeks-x86_64.AppImage
+	7z x $(DESTINATION) -o$(PWD)/AppDir
+	chmod +x $(PWD)/AppDir/AppRun
+	chmod +x $(PWD)/AppDir/chrome-sandbox
+	chmod +x $(PWD)/AppDir/museeks
+
+	export ARCH=x86_64 && bin/appimagetool.AppImage AppDir $(PWD)/$(DESTINATION)
+
 	chmod +x $(PWD)/$(DESTINATION)
+	make clean
+
+clean:
+	rm -rf $(PWD)/AppDir
